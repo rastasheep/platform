@@ -44,7 +44,7 @@
               # keep your shell history in iex
               export ERL_AFLAGS="-kernel shell_history enabled"
 
-              export MIX_ENV=dev
+              # export MIX_ENV=dev
             '';
           };
         };
