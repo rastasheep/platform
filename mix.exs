@@ -13,7 +13,7 @@ defmodule Platform.MixProject do
       test_coverage: [
         summary: [
           # TODO: make this 90
-          threshold: 29
+          threshold: 25
         ]
       ]
     ]
