@@ -39,6 +39,7 @@ defmodule PlatformWeb.Router do
 
       live_dashboard "/dashboard", metrics: PlatformWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+      get "/mockup", PlatformWeb.MockupController, :home
     end
   end
 end
