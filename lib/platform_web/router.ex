@@ -18,6 +18,8 @@ defmodule PlatformWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    resources "/organizations", OrganizationController
   end
 
   # Other scopes may use custom stacks.
