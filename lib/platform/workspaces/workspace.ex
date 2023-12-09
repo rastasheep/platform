@@ -1,25 +1,24 @@
-defmodule Platform.Accounts.Organization do
+defmodule Platform.Workspaces.Workspace do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "organizations" do
+  schema "workspaces" do
     field :name, :string
     field :slug, :string
-    field :contact_email, :string
+    field :description, :string
 
-    has_many :workspaces, Platform.Workspaces.Workspace
+    belongs_to :organization, Platform.Accounts.Organization
 
     timestamps(type: :utc_datetime)
   end
 
   @doc false
-  def changeset(organization, attrs) do
-    organization
-    |> cast(attrs, [:name, :contact_email])
-    |> validate_required([:name, :contact_email])
+  def changeset(workspace, attrs) do
+    workspace
+    |> cast(attrs, [:name, :description, :organization_id])
+    |> validate_required([:name, :organization_id])
     |> generate_slug()
     |> unique_constraint(:slug)
-    |> validate_format(:contact_email, ~r/@/)
   end
 
   defp generate_slug(changeset) do

@@ -1,0 +1,25 @@
+<.header>
+  Listing Workspaces
+  <:actions>
+    <.link href={~p"/workspaces/new"}>
+      <.button>New Workspace</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="workspaces" rows={@workspaces} row_click={&JS.navigate(~p"/workspaces/#{&1}")}>
+  <:col :let={workspace} label="Name"><%= workspace.name %></:col>
+  <:col :let={workspace} label="Slug"><%= workspace.slug %></:col>
+  <:col :let={workspace} label="Description"><%= workspace.description %></:col>
+  <:action :let={workspace}>
+    <div class="sr-only">
+      <.link navigate={~p"/workspaces/#{workspace}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/workspaces/#{workspace}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={workspace}>
+    <.link href={~p"/workspaces/#{workspace}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

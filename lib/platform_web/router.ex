@@ -20,6 +20,7 @@ defmodule PlatformWeb.Router do
     get "/", PageController, :home
 
     resources "/organizations", OrganizationController
+    resources "/workspaces", WorkspaceController
   end
 
   # Other scopes may use custom stacks.
