@@ -1,0 +1,74 @@
+<.header>
+  Workspaces
+  <:actions>
+    <.button phx-click={show_modal("org-modal")}>New Org</.button>
+    <.button phx-click={show_modal("workspace-modal")}>New Workspace</.button>
+  </:actions>
+</.header>
+
+<%= if Enum.empty?(@orgs) do %>
+  You don't have any organizations, please create one first.
+<% end %>
+
+<div :for={org <- Enum.sort_by(@orgs, & &1.slug)}>
+  <%= if Enum.empty?(org.workspaces) do %>
+    <%= org.slug %>
+  <% end %>
+
+  <div :for={workspace <- Enum.sort_by(org.workspaces, & &1.slug)}>
+    <%= org.slug <> "/" <> workspace.slug %>
+  </div>
+</div>
+
+<.modal :if={@live_action in [:new, :edit]} id="home-modal" show on_cancel={JS.patch(~p"/home")}>
+  <.live_component
+    module={PlatformWeb.HomeLive.FormComponent}
+    id={@home.id || :new}
+    title={@page_title}
+    action={@live_action}
+    home={@home}
+    patch={~p"/home"}
+  />
+</.modal>
+
+<.modal id="org-modal">
+  <.header>
+    New Organization
+    <:subtitle>Use this form to manage organization records in your database.</:subtitle>
+  </.header>
+
+  <.simple_form :let={f} for={@org_changes} phx-submit="create-org">
+    <.error :if={@org_changes.action}>
+      Oops, something went wrong! Please check the errors below.
+    </.error>
+    <.input field={f[:name]} type="text" autocomplete="off" label="Name" />
+    <.input field={f[:contact_email]} type="text" autocomplete="off" label="Contact email" />
+    <:actions>
+      <.button>Save Organization</.button>
+    </:actions>
+  </.simple_form>
+</.modal>
+
+<.modal id="workspace-modal">
+  <.header>
+    New Workspace
+    <:subtitle>Use this form to manage organization records in your database.</:subtitle>
+  </.header>
+
+  <.simple_form :let={f} for={@ws_changes} phx-submit="create-ws">
+    <.error :if={@ws_changes.action}>
+      Oops, something went wrong! Please check the errors below.
+    </.error>
+    <.input
+      options={org_options(@orgs)}
+      field={f[:organization_id]}
+      type="select"
+      label="Ogranization"
+    />
+    <.input field={f[:name]} type="text" autocomplete="off" label="Name" />
+    <.input field={f[:description]} type="text" autocomplete="off" label="Description" />
+    <:actions>
+      <.button>Save Workspace</.button>
+    </:actions>
+  </.simple_form>
+</.modal>

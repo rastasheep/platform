@@ -17,8 +17,11 @@ defmodule Platform.Accounts do
       [%Organization{}, ...]
 
   """
-  def list_organizations do
+  def list_organizations(opts \\ []) do
+    associations = Keyword.get(opts, :preload, [])
+
     Repo.all(Organization)
+    |> Repo.preload(associations)
   end
 
   @doc """
@@ -49,8 +52,11 @@ defmodule Platform.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_organization(attrs \\ %{}) do
+  def create_organization(attrs \\ %{}, opts \\ []) do
+    associations = Keyword.get(opts, :preload, [])
+
     %Organization{}
+    |> Repo.preload(associations)
     |> Organization.changeset(attrs)
     |> Repo.insert()
   end
@@ -100,5 +106,15 @@ defmodule Platform.Accounts do
   """
   def change_organization(%Organization{} = organization, attrs \\ %{}) do
     Organization.changeset(organization, attrs)
+  end
+
+  @doc """
+  Reloads a organization(s) from the database.
+  """
+  def reload(organizations, opts \\ []) do
+    associations = Keyword.get(opts, :preload, [])
+
+    Repo.reload(organizations)
+    |> Repo.preload(associations)
   end
 end

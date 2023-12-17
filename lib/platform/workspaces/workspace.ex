@@ -18,7 +18,7 @@ defmodule Platform.Workspaces.Workspace do
     |> cast(attrs, [:name, :description, :organization_id])
     |> validate_required([:name, :organization_id])
     |> generate_slug()
-    |> unique_constraint(:slug)
+    |> unique_constraint([:slug, :organization_id], error_key: :name)
   end
 
   defp generate_slug(changeset) do

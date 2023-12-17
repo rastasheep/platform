@@ -12,6 +12,6 @@ defmodule Platform.Repo.Migrations.CreateWorkspaces do
     end
 
     create index(:workspaces, [:organization_id])
-    create unique_index(:workspaces, [:slug])
+    create unique_index(:workspaces, [:slug, :organization_id])
   end
 end

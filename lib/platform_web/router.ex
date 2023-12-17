@@ -19,6 +19,8 @@ defmodule PlatformWeb.Router do
 
     get "/", PageController, :home
 
+    live "/home", HomeLive.Home, :home
+
     resources "/organizations", OrganizationController
     resources "/workspaces", WorkspaceController
   end

@@ -18,7 +18,7 @@ defmodule Platform.Accounts.Organization do
     |> cast(attrs, [:name, :contact_email])
     |> validate_required([:name, :contact_email])
     |> generate_slug()
-    |> unique_constraint(:slug)
+    |> unique_constraint(:slug, error_key: :name)
     |> validate_format(:contact_email, ~r/@/)
   end
 
