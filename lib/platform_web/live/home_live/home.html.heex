@@ -1,35 +1,82 @@
-<.header>
-  Workspaces
-  <:actions>
-    <.button phx-click={show_modal("org-modal")}>New Org</.button>
-    <.button phx-click={show_modal("workspace-modal")}>New Workspace</.button>
-  </:actions>
-</.header>
-
-<%= if Enum.empty?(@orgs) do %>
-  You don't have any organizations, please create one first.
-<% end %>
-
-<div :for={org <- Enum.sort_by(@orgs, & &1.slug)}>
-  <%= if Enum.empty?(org.workspaces) do %>
-    <%= org.slug %>
-  <% end %>
-
-  <div :for={workspace <- Enum.sort_by(org.workspaces, & &1.slug)}>
-    <%= org.slug <> "/" <> workspace.slug %>
+<div class="w-full px-6 py-4 mx-auto flex flex-wrap">
+  <div class="w-full flex items-center px-3 py-3 mb-6 bg-white rounded-2xl shadow-[0px_0px_0px_1px,0px_1px_1px_-0.5px,0px_3px_3px_-1.5px,0px_6px_6px_-3px,0px_12px_12px_-6px,0px_24px_24px_-12px] shadow-black/[0.06]">
+    <a href="" class="pr-4">
+      <.icon name="hero-beaker-solid" class="w-8 h-8 rotate-12 text-gray-900" />
+    </a>
+    <nav role="navigation" aria-label="Page context">
+      <ul role="list" class="list-style-none font-bold">
+        <li>
+          <a href class="p-4 text-gray-900 hover:bg-slate-100 rounded-2xl">
+            Home
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <a href="" class="pr-4 ml-auto">
+      <.icon name="hero-cog-6-tooth-solid" />
+    </a>
   </div>
 </div>
 
-<.modal :if={@live_action in [:new, :edit]} id="home-modal" show on_cancel={JS.patch(~p"/home")}>
-  <.live_component
-    module={PlatformWeb.HomeLive.FormComponent}
-    id={@home.id || :new}
-    title={@page_title}
-    action={@live_action}
-    home={@home}
-    patch={~p"/home"}
-  />
-</.modal>
+<%= if Enum.empty?(@organizations) do %>
+  <div class="m-auto w-full max-w-full md:w-8/12 2xl:w-6/12 px-3 p-4">
+    <.header class="flex-wrap lg:flex-nowrap">
+      Ready to level up your stack? <br />
+      <:subtitle>
+        Create your own organization or join an existing one. <br />
+        Think of organizations as tidy folders for your workspaces, keeping projects and communication contained, unlike a desk swamped with loose papers!
+      </:subtitle>
+    </.header>
+    <.button phx-click={show_modal("org-modal")}>New Organization</.button>
+  </div>
+<% else %>
+  <div class="w-full px-6 py-6 mx-auto flex flex-col flex-wrap">
+    <div class="m-auto w-full max-w-full md:w-8/12 2xl:w-6/12 px-3 p-4">
+      <.header class="flex-wrap lg:flex-nowrap">
+        Workspaces
+        <:subtitle>
+          Workspaces are the heart of Platform. <br />
+          Inside workspaces, you’ll define artchitecture, ideas, plan and maintain next big thing.
+        </:subtitle>
+        <:actions>
+          <.button phx-click={show_modal("org-modal")}>New Organization</.button>
+          <.button phx-click={show_modal("workspace-modal")}>New Workspace</.button>
+        </:actions>
+      </.header>
+    </div>
+
+    <div class="m-auto w-full max-w-full md:w-8/12 2xl:w-6/12 mb-6 rounded-2xl  shadow-[0px_0px_0px_1px,0px_1px_1px_-0.5px,0px_3px_3px_-1.5px,0px_6px_6px_-3px,0px_12px_12px_-6px,0px_24px_24px_-12px] shadow-black/[0.06]">
+      <ul role="list" class="divide-y divide-gray-100">
+        <li :for={org <- Enum.sort_by(@organizations, & &1.slug)}>
+          <%= if Enum.empty?(org.workspaces) do %>
+            <div class="px-3  py-5">
+              <div class="font-semibold leading-6 text-gray-900"><%= org.slug %></div>
+              <div class="my-3 text-balance leading-5 text-gray-500">
+                This organization has no workspaces.
+              </div>
+            </div>
+          <% end %>
+
+          <%= for  workspace <- Enum.sort_by(org.workspaces, & &1.slug) do %>
+            <a href class="flex justify-between px-3 py-5 rounded-2xl hover:bg-slate-100">
+              <div class="">
+                <div class="font-semibold leading-6 text-gray-900">
+                  <%= org.slug <> " / " <> workspace.slug %>
+                </div>
+                <div :if={workspace.description} class="my-3 text-balance leading-5 text-gray-500">
+                  <%= workspace.description %>
+                </div>
+              </div>
+              <div class="my-auto">
+                <.icon name="hero-chevron-double-right" />
+              </div>
+            </a>
+          <% end %>
+        </li>
+      </ul>
+    </div>
+  </div>
+<% end %>
 
 <.modal id="org-modal">
   <.header>
@@ -37,8 +84,8 @@
     <:subtitle>Use this form to manage organization records in your database.</:subtitle>
   </.header>
 
-  <.simple_form :let={f} for={@org_changes} phx-submit="create-org">
-    <.error :if={@org_changes.action}>
+  <.simple_form :let={f} for={@organization_changes} phx-submit="create-organization">
+    <.error :if={@organization_changes.action}>
       Oops, something went wrong! Please check the errors below.
     </.error>
     <.input field={f[:name]} type="text" autocomplete="off" label="Name" />
@@ -55,12 +102,12 @@
     <:subtitle>Use this form to manage organization records in your database.</:subtitle>
   </.header>
 
-  <.simple_form :let={f} for={@ws_changes} phx-submit="create-ws">
-    <.error :if={@ws_changes.action}>
+  <.simple_form :let={f} for={@workspace_changes} phx-submit="create-workspace">
+    <.error :if={@workspace_changes.action}>
       Oops, something went wrong! Please check the errors below.
     </.error>
     <.input
-      options={org_options(@orgs)}
+      options={org_options(@organizations)}
       field={f[:organization_id]}
       type="select"
       label="Ogranization"
