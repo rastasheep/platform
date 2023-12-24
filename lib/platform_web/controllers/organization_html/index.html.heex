@@ -1,0 +1,29 @@
+<.header>
+  Listing Organizations
+  <:actions>
+    <.link href={~p"/organizations/new"}>
+      <.button>New Organization</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="organizations"
+  rows={@organizations}
+  row_click={&JS.navigate(~p"/organizations/#{&1}")}
+>
+  <:col :let={organization} label="Name"><%= organization.name %></:col>
+  <:col :let={organization} label="Slug"><%= organization.slug %></:col>
+  <:col :let={organization} label="Contact email"><%= organization.contact_email %></:col>
+  <:action :let={organization}>
+    <div class="sr-only">
+      <.link navigate={~p"/organizations/#{organization}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/organizations/#{organization}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={organization}>
+    <.link href={~p"/organizations/#{organization}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

@@ -1,0 +1,17 @@
+<.header>
+  Workspace <%= @workspace.id %>
+  <:subtitle>This is a workspace record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/workspaces/#{@workspace}/edit"}>
+      <.button>Edit workspace</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @workspace.name %></:item>
+  <:item title="Slug"><%= @workspace.slug %></:item>
+  <:item title="Description"><%= @workspace.description %></:item>
+</.list>
+
+<.back navigate={~p"/workspaces"}>Back to workspaces</.back>

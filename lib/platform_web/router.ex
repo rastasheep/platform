@@ -18,6 +18,11 @@ defmodule PlatformWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    live "/home", HomeLive.Home, :home
+
+    resources "/organizations", OrganizationController
+    resources "/workspaces", WorkspaceController
   end
 
   # Other scopes may use custom stacks.
